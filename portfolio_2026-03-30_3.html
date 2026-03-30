@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio – 30. 3. 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f0f11;
+    --surface: #16161a;
+    --border: #2a2a32;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #c8f060;
+
+    --fwra:   #c8f060;
+    --spyy:   #60d0f0;
+    --alpha:  #f0a060;
+    --s:      #e060c8;
+
+    --t212:   #60c8f0;
+    --ibkr:   #f06080;
+    --rev:    #a060f0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    padding: 36px 24px 48px;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--accent);
+  }
+
+  header .total {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  header .meta {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px 24px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .chart-wrap {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  svg.donut {
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    overflow: visible;
+  }
+
+  .donut-center {
+    font-family: 'Syne', sans-serif;
+    fill: var(--text);
+    font-size: 13px;
+    font-weight: 700;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+  .donut-label {
+    fill: var(--muted);
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+
+  table.legend {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  table.legend thead th {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+    padding-bottom: 8px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  table.legend thead th:first-child { text-align: left; }
+
+  table.legend tbody tr + tr td {
+    border-top: 1px solid var(--border);
+  }
+
+  table.legend td {
+    padding: 7px 4px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  table.legend td:first-child {
+    text-align: left;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    margin-right: 7px;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+
+  .pct { color: var(--accent); font-size: 11px; }
+  .val { color: var(--text); }
+  .units { color: var(--muted); }
+
+  .footnote {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Portfolio</h1>
+  <span class="total">– tis. Kč</span>
+  <div class="meta">
+    30. 3. 2026<br>
+    FWRA.MI €6,96 · SPYY.DE €240,15 · S $12,81<br>
+    EUR/CZK 24,54 · USD/CZK 21,32
+  </div>
+</header>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="card-title">Složení dle aktiva</div>
+    <div class="chart-wrap">
+      <svg class="donut" viewBox="0 0 160 160">
+        <g id="donut-assets"></g>
+        <text class="donut-center" x="80" y="76" id="center-assets">–</text>
+        <text class="donut-label"  x="80" y="90">tis. Kč</text>
+      </svg>
+      <div style="flex:1; min-width:0;">
+        <table class="legend">
+          <thead>
+            <tr>
+              <th>Aktívum</th>
+              <th>Podíl</th>
+              <th>tis. Kč</th>
+              <th>Jedn.</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-assets"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Složení dle brokera</div>
+    <div class="chart-wrap">
+      <svg class="donut" viewBox="0 0 160 160">
+        <g id="donut-brokers"></g>
+        <text class="donut-center" x="80" y="76" id="center-brokers">–</text>
+        <text class="donut-label"  x="80" y="90">tis. Kč</text>
+      </svg>
+      <div style="flex:1; min-width:0;">
+        <table class="legend">
+          <thead>
+            <tr>
+              <th>Broker</th>
+              <th>Podíl</th>
+              <th>tis. Kč</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbl-brokers"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footnote">
+  Alpha Picks: fixní odhad ~200 tis. Kč (T212, individuální akcie) &nbsp;|&nbsp;
+  S: pouze RSU na IBKR (1 257 ks), bez pozice na E-Trade &nbsp;|&nbsp;
+  Kurzy dle Apple Stocks, 30. 3. 2026 16:20 SEČ
+</div>
+
+<script>
+const EUR_CZK  = 24.54;
+const USD_CZK  = 21.32;
+const FWRA_EUR = 6.96;
+const SPYY_EUR = 240.15;
+const S_USD    = 12.81;
+
+const FWRA_PX_CZK = FWRA_EUR * EUR_CZK;
+const SPYY_PX_CZK = SPYY_EUR * EUR_CZK;
+const S_PX_CZK    = S_USD    * USD_CZK;
+
+const fwra_t212  = 3124;
+const fwra_ibkr  = 2203;
+const fwra_rev   = 1416;
+const fwra_total = fwra_t212 + fwra_ibkr + fwra_rev;
+const spyy_t212  = 81.5;
+const s_ibkr     = 1257;
+const alpha_fixed = 200;
+
+const vFWRA  = fwra_total * FWRA_PX_CZK / 1000;
+const vSPYY  = spyy_t212  * SPYY_PX_CZK / 1000;
+const vS     = s_ibkr     * S_PX_CZK    / 1000;
+const vAlpha = alpha_fixed;
+const total  = vFWRA + vSPYY + vS + vAlpha;
+
+const bT212 = fwra_t212 * FWRA_PX_CZK / 1000 + vSPYY + vAlpha;
+const bIBKR = fwra_ibkr * FWRA_PX_CZK / 1000 + vS;
+const bRev  = fwra_rev  * FWRA_PX_CZK / 1000;
+
+function drawDonut(groupId, segments) {
+  const g = document.getElementById(groupId);
+  const cx = 80, cy = 80, r = 60, sw = 22;
+  const tot = segments.reduce((a, s) => a + s.value, 0);
+  let angle = -Math.PI / 2;
+  segments.forEach(seg => {
+    const span = seg.value / tot * 2 * Math.PI;
+    const endAngle = angle + span;
+    const gap = 0.025;
+    const a1 = angle + gap, a2 = endAngle - gap;
+    const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    const x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+    const large = (a2 - a1) > Math.PI ? 1 : 0;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', seg.color);
+    path.setAttribute('stroke-width', sw);
+    path.setAttribute('stroke-linecap', 'round');
+    g.appendChild(path);
+    angle = endAngle;
+  });
+}
+
+function fillTable(tbodyId, rows) {
+  const tb = document.getElementById(tbodyId);
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="dot" style="background:${r.color}"></span>${r.label}</td>
+      <td class="pct">${r.pct}%</td>
+      <td class="val">${r.val}</td>
+      <td class="units">${r.units}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+
+drawDonut('donut-assets', [
+  { value: vFWRA,  color: 'var(--fwra)' },
+  { value: vSPYY,  color: 'var(--spyy)' },
+  { value: vAlpha, color: 'var(--alpha)' },
+  { value: vS,     color: 'var(--s)'    },
+]);
+
+fillTable('tbl-assets', [
+  { color:'var(--fwra)',  label:'FWRA',  pct:(vFWRA /total*100).toFixed(1), val:Math.round(vFWRA).toLocaleString('cs'),  units:fwra_total.toLocaleString('cs')+' ks' },
+  { color:'var(--spyy)',  label:'SPYY',  pct:(vSPYY /total*100).toFixed(1), val:Math.round(vSPYY).toLocaleString('cs'),  units:spyy_t212+' ks' },
+  { color:'var(--alpha)', label:'Alpha', pct:(vAlpha/total*100).toFixed(1), val:Math.round(vAlpha).toLocaleString('cs'), units:'–' },
+  { color:'var(--s)',     label:'S',     pct:(vS    /total*100).toFixed(1), val:Math.round(vS).toLocaleString('cs'),     units:s_ibkr+' ks' },
+]);
+
+drawDonut('donut-brokers', [
+  { value: bT212, color: 'var(--t212)' },
+  { value: bIBKR, color: 'var(--ibkr)' },
+  { value: bRev,  color: 'var(--rev)'  },
+]);
+
+fillTable('tbl-brokers', [
+  { color:'var(--t212)', label:'T212',    pct:(bT212/total*100).toFixed(1), val:Math.round(bT212).toLocaleString('cs'), units:'' },
+  { color:'var(--ibkr)', label:'IBKR',    pct:(bIBKR/total*100).toFixed(1), val:Math.round(bIBKR).toLocaleString('cs'), units:'' },
+  { color:'var(--rev)',  label:'Revolut', pct:(bRev /total*100).toFixed(1), val:Math.round(bRev).toLocaleString('cs'),  units:'' },
+]);
+
+const totalRounded = Math.round(total).toLocaleString('cs');
+document.getElementById('center-assets').textContent  = totalRounded;
+document.getElementById('center-brokers').textContent = totalRounded;
+document.querySelector('.total').textContent = totalRounded + ' tis. Kč';
+</script>
+
+</body>
+</html>
