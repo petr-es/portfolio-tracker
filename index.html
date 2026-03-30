@@ -94,6 +94,7 @@
     <select id="theme-select" onchange="setTheme(this.value)">
       <option value="blue">Blue</option>
       <option value="grey">Grey</option>
+      <option value="light">Light</option>
     </select>
   </div>
 </div>
@@ -101,7 +102,7 @@
 <script src="data.js"></script>
 <script src="portfolio.js"></script>
 <script>
-  const THEMES = { blue: 'style.css', grey: 'style-grey.css' };
+  const THEMES = { blue: 'style.css', grey: 'style-grey.css', light: 'style-light.css' };
   const sheet = document.querySelector('link[rel="stylesheet"]');
   const sel = document.getElementById('theme-select');
 

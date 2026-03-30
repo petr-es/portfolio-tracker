@@ -6,17 +6,17 @@
   --border:  #e2e8f0;  /* slate-200 */
   --text:    #0f172a;  /* slate-900 */
   --muted:   #64748b;  /* slate-500 */
-  --accent:  #65a30d;  /* lime-600 */
+  --accent:  #84cc16;  /* lime-500 */
 
-  --fwra:   #65a30d;  /* lime-600 */
-  --spyy:   #0891b2;  /* cyan-600 */
-  --alpha:  #ea580c;  /* orange-600 */
-  --s:      #c026d3;  /* fuchsia-600 */
+  --fwra:   #84cc16;  /* lime-500 */
+  --spyy:   #06b6d4;  /* cyan-500 */
+  --alpha:  #f97316;  /* orange-500 */
+  --s:      #d946ef;  /* fuchsia-500 */
 
-  --t212:   #0284c7;  /* sky-600 */
-  --ibkr:   #e11d48;  /* rose-600 */
-  --rev:    #7c3aed;  /* violet-600 */
-  --etrade: #059669;  /* emerald-600 */
+  --t212:   #0ea5e9;  /* sky-500 */
+  --ibkr:   #f43f5e;  /* rose-500 */
+  --rev:    #8b5cf6;  /* violet-500 */
+  --etrade: #10b981;  /* emerald-500 */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +46,7 @@ header h1 {
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: var(--accent);
+  color: var(--text);
   white-space: nowrap;
 }
 
