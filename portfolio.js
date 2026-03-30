@@ -148,16 +148,15 @@ function render(d) {
   ]);
 
   // ── Totály ───────────────────────────────────────────────────────────────────
-  const totalTis = Math.round(total).toLocaleString('cs');
+  const totalMil = (total / 1000).toLocaleString('cs', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const totalKc  = Math.round(total * 1000).toLocaleString('cs');
-  document.getElementById('center-assets').textContent  = totalTis;
-  document.getElementById('center-brokers').textContent = totalTis;
+  document.getElementById('center-assets').textContent  = totalMil + ' mil.';
+  document.getElementById('center-brokers').textContent = totalMil + ' mil.';
   document.querySelector('.total').textContent = totalKc + ' Kč';
 
   // ── Footnote ─────────────────────────────────────────────────────────────────
   document.getElementById('footnote').innerHTML =
     `Alpha Picks: fixní odhad ~200 tis. Kč (T212, individuální akcie) &nbsp;|&nbsp; ` +
-    `S: IBKR ${s_ibkr.toLocaleString('cs')} RSU + E-Trade ${s_etrade.toLocaleString('cs')} ks &nbsp;|&nbsp; ` +
     `Kurzy dle Yahoo Finance, ${d.date}`;
 }
 

@@ -22,7 +22,7 @@
       <svg class="donut" viewBox="0 0 160 160">
         <g id="donut-assets"></g>
         <text class="donut-center" x="80" y="77" id="center-assets">–</text>
-        <text class="donut-label"  x="80" y="91">tis. Kč</text>
+        <text class="donut-label"  x="80" y="91">Kč</text>
       </svg>
       <div style="flex:1; min-width:0;">
         <table class="legend">
@@ -46,7 +46,7 @@
       <svg class="donut" viewBox="0 0 160 160">
         <g id="donut-brokers"></g>
         <text class="donut-center" x="80" y="77" id="center-brokers">–</text>
-        <text class="donut-label"  x="80" y="91">tis. Kč</text>
+        <text class="donut-label"  x="80" y="91">Kč</text>
       </svg>
       <div style="flex:1; min-width:0;">
         <table class="legend">
@@ -88,10 +88,33 @@
 
 </div>
 
-<div class="footnote" id="footnote"></div>
+<div class="footnote-row">
+  <div class="footnote" id="footnote"></div>
+  <div class="theme-toggle">
+    <select id="theme-select" onchange="setTheme(this.value)">
+      <option value="blue">Blue</option>
+      <option value="grey">Grey</option>
+    </select>
+  </div>
+</div>
 
 <script src="data.js"></script>
 <script src="portfolio.js"></script>
+<script>
+  const THEMES = { blue: 'style.css', grey: 'style-grey.css' };
+  const sheet = document.querySelector('link[rel="stylesheet"]');
+  const sel = document.getElementById('theme-select');
+
+  function setTheme(val) {
+    sheet.setAttribute('href', THEMES[val]);
+    localStorage.setItem('theme', val);
+  }
+
+  // restore last used theme
+  const saved = localStorage.getItem('theme') || 'blue';
+  sel.value = saved;
+  if (saved !== 'blue') sheet.setAttribute('href', THEMES[saved]);
+</script>
 
 </body>
 </html>
