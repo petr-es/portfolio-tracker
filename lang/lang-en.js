@@ -19,7 +19,7 @@ const LANG_EN = {
   // Currency and units
   currency:       'CZK',
   million:        'mil.',
-  thousands:      'thous.',
+  thousands:      'th.',
   unitsSuffix:    'pcs',
   fixed:          'fixed',
   locale:         'en',
