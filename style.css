@@ -38,9 +38,9 @@ header h1 {
 }
 
 header .total {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Syne', sans-serif;
   font-size: 19px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text);
   white-space: nowrap;
 }
