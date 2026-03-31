@@ -108,7 +108,6 @@
   </div>
 </div>
 
-<script src="config/config.js"></script>
 <script src="lang/lang-cs.js"></script>
 <script src="lang/lang-en.js"></script>
 <script>
@@ -191,28 +190,36 @@
       '<path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>';
   }
 
-  async function pollLatestRun(triggeredAfter) {
+  async function pollLatestRun(triggeredAfter, token) {
     const url = `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/runs?per_page=1`;
-    const res  = await fetch(url, { headers: { Authorization: `Bearer ${GITHUB_TOKEN}` } });
+    const res  = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
     if (!res.ok) { setBtnState('error'); return; }
     const { workflow_runs } = await res.json();
     const run = workflow_runs[0];
     if (!run || new Date(run.created_at) < triggeredAfter) {
-      pollTimer = setTimeout(() => pollLatestRun(triggeredAfter), 3000);
+      pollTimer = setTimeout(() => pollLatestRun(triggeredAfter, token), 3000);
       return;
     }
     if (run.status === 'completed') {
       setBtnState(run.conclusion === 'success' ? 'success' : 'error');
     } else {
-      pollTimer = setTimeout(() => pollLatestRun(triggeredAfter), 3000);
+      pollTimer = setTimeout(() => pollLatestRun(triggeredAfter, token), 3000);
     }
   }
 
-  async function triggerUpdate() {
-    if (!GITHUB_TOKEN || GITHUB_TOKEN === 'your_token_here') {
-      alert('Nastav GITHUB_TOKEN v config.js');
-      return;
+  function getToken() {
+    let token = localStorage.getItem('gh_token');
+    if (!token) {
+      token = prompt('GitHub Personal Access Token (scope: workflow):\nUloží se pouze do localStorage tohoto prohlížeče.');
+      if (!token) return null;
+      localStorage.setItem('gh_token', token.trim());
     }
+    return token;
+  }
+
+  async function triggerUpdate() {
+    const token = getToken();
+    if (!token) return;
     clearTimeout(pollTimer);
     setBtnState('loading');
     const triggeredAt = new Date();
@@ -220,12 +227,17 @@
       `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
       {
         method: 'POST',
-        headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: 'main' }),
       }
     );
-    if (!res.ok) { setBtnState('error'); return; }
-    setTimeout(() => pollLatestRun(triggeredAt), 4000);
+    if (!res.ok) {
+      // token může být špatný — smaž ho ať se příště zeptá znovu
+      if (res.status === 401 || res.status === 403) localStorage.removeItem('gh_token');
+      setBtnState('error');
+      return;
+    }
+    setTimeout(() => pollLatestRun(triggeredAt, token), 4000);
   }
 </script>
 
