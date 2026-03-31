@@ -4,34 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
 
 <header>
   <h1>Portfolio<span class="slash">/</span><span class="date" id="header-date">–</span></h1>
-  <span class="total">– tis. Kč</span>
+  <span class="total">–</span>
   <div class="meta" id="header-meta"></div>
 </header>
 
 <div class="grid">
 
   <div class="card">
-    <div class="card-title">Složení dle aktiva</div>
+    <div class="card-title" data-i18n="assetsByAsset">Složení dle aktiva</div>
     <div class="chart-wrap">
       <svg class="donut" viewBox="0 0 160 160">
         <g id="donut-assets"></g>
         <text class="donut-center" x="80" y="77" id="center-assets">–</text>
-        <text class="donut-label"  x="80" y="91">Kč</text>
+        <text class="donut-label"  x="80" y="91" data-i18n="currency">Kč</text>
       </svg>
       <div style="flex:1; min-width:0;">
         <table class="legend">
           <thead>
             <tr>
-              <th>Aktívum</th>
-              <th>Podíl</th>
-              <th>tis. Kč</th>
-              <th>Ks</th>
+              <th data-i18n="colAsset">Aktívum</th>
+              <th data-i18n="colShare">Podíl</th>
+              <th data-i18n="colThousands">tis. Kč</th>
+              <th data-i18n="colQty">Ks</th>
             </tr>
           </thead>
           <tbody id="tbl-assets"></tbody>
@@ -41,20 +42,20 @@
   </div>
 
   <div class="card">
-    <div class="card-title">Složení dle brokera</div>
+    <div class="card-title" data-i18n="assetsByBroker">Složení dle brokera</div>
     <div class="chart-wrap">
       <svg class="donut" viewBox="0 0 160 160">
         <g id="donut-brokers"></g>
         <text class="donut-center" x="80" y="77" id="center-brokers">–</text>
-        <text class="donut-label"  x="80" y="91">Kč</text>
+        <text class="donut-label"  x="80" y="91" data-i18n="currency">Kč</text>
       </svg>
       <div style="flex:1; min-width:0;">
         <table class="legend">
           <thead>
             <tr>
-              <th>Broker</th>
-              <th>Podíl</th>
-              <th>tis. Kč</th>
+              <th data-i18n="colBroker">Broker</th>
+              <th data-i18n="colShare">Podíl</th>
+              <th data-i18n="colThousands">tis. Kč</th>
               <th></th>
             </tr>
           </thead>
@@ -65,7 +66,7 @@
   </div>
 
   <div class="card card-full">
-    <div class="card-title">Assety</div>
+    <div class="card-title" data-i18n="assets">Assety</div>
     <div class="table-scroll">
       <table class="legend legend--fixed">
         <colgroup>
@@ -73,12 +74,12 @@
         </colgroup>
         <thead>
           <tr>
-            <th>Aktívum</th>
-            <th>Cena</th>
-            <th>Kurz</th>
-            <th>Kč / ks</th>
-            <th>Ks celkem</th>
-            <th>Hodnota</th>
+            <th data-i18n="colAsset">Aktívum</th>
+            <th data-i18n="colPrice">Cena</th>
+            <th data-i18n="colRate">Kurz</th>
+            <th data-i18n="colCzkPerUnit">Kč / ks</th>
+            <th data-i18n="colTotalQty">Ks celkem</th>
+            <th data-i18n="colValue">Hodnota</th>
           </tr>
         </thead>
         <tbody id="tbl-prices"></tbody>
@@ -91,6 +92,10 @@
 <div class="footnote-row">
   <div class="footnote" id="footnote"></div>
   <div class="theme-toggle">
+    <select id="lang-select" onchange="setLang(this.value)">
+      <option value="cs">CS</option>
+      <option value="en">EN</option>
+    </select>
     <select id="theme-select" onchange="setTheme(this.value)">
       <option value="blue">Blue</option>
       <option value="grey">Grey</option>
@@ -99,22 +104,53 @@
   </div>
 </div>
 
+<script src="lang/lang-cs.js"></script>
+<script src="lang/lang-en.js"></script>
+<script>
+  const LANGS = { cs: LANG_CS, en: LANG_EN };
+  let LANG = LANGS[localStorage.getItem('lang') || 'cs'];
+</script>
 <script src="data.js"></script>
 <script src="portfolio.js"></script>
 <script>
-  const THEMES = { blue: 'style.css', grey: 'style-grey.css', light: 'style-light.css' };
-  const sheet = document.querySelector('link[rel="stylesheet"]');
-  const sel = document.getElementById('theme-select');
+  const THEMES = { blue: 'styles/style.css', grey: 'styles/style-grey.css', light: 'styles/style-light.css' };
+  const sheet  = document.querySelector('link[rel="stylesheet"]');
+  const selTheme = document.getElementById('theme-select');
+  const selLang  = document.getElementById('lang-select');
 
   function setTheme(val) {
     sheet.setAttribute('href', THEMES[val]);
     localStorage.setItem('theme', val);
   }
 
-  // restore last used theme
-  const saved = localStorage.getItem('theme') || 'blue';
-  sel.value = saved;
-  if (saved !== 'blue') sheet.setAttribute('href', THEMES[saved]);
+  function applyLang() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (LANG[key] !== undefined) el.textContent = LANG[key];
+    });
+  }
+
+  function setLang(val) {
+    LANG = LANGS[val];
+    localStorage.setItem('lang', val);
+    document.documentElement.lang = val;
+    ['tbl-assets', 'tbl-brokers', 'tbl-prices'].forEach(id => {
+      document.getElementById(id).innerHTML = '';
+    });
+    render(DATA);
+    applyLang();
+  }
+
+  // restore theme
+  const savedTheme = localStorage.getItem('theme') || 'blue';
+  selTheme.value = savedTheme;
+  if (savedTheme !== 'blue') sheet.setAttribute('href', THEMES[savedTheme]);
+
+  // restore lang
+  const savedLang = localStorage.getItem('lang') || 'cs';
+  selLang.value = savedLang;
+  document.documentElement.lang = savedLang;
+  applyLang();
 </script>
 
 </body>

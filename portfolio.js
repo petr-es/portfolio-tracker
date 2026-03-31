@@ -53,7 +53,8 @@ function fillPricesTable(rows) {
 }
 
 function fmt(n, dec = 2) {
-  return n.toFixed(dec).replace('.', ',');
+  const s = n.toFixed(dec);
+  return LANG.locale === 'cs' ? s.replace('.', ',') : s;
 }
 
 function render(d) {
@@ -96,10 +97,10 @@ function render(d) {
   ]);
 
   fillTable('tbl-assets', [
-    { color:'var(--fwra)',  label:'FWRA',  pct:(vFWRA /total*100).toFixed(1), val:Math.round(vFWRA).toLocaleString('cs'),  units:fwra_total.toLocaleString('cs')+' ks' },
-    { color:'var(--spyy)',  label:'SPYY',  pct:(vSPYY /total*100).toFixed(1), val:Math.round(vSPYY).toLocaleString('cs'),  units:spyy_total+' ks' },
-    { color:'var(--alpha)', label:'Alpha', pct:(vAlpha/total*100).toFixed(1), val:Math.round(vAlpha).toLocaleString('cs'), units:'–' },
-    { color:'var(--s)',     label:'S',     pct:(vS    /total*100).toFixed(1), val:Math.round(vS).toLocaleString('cs'),     units:s_total.toLocaleString('cs')+' ks' },
+    { color:'var(--fwra)',  label:'FWRA',  pct:(vFWRA /total*100).toFixed(1), val:Math.round(vFWRA).toLocaleString(LANG.locale),  units:fwra_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
+    { color:'var(--spyy)',  label:'SPYY',  pct:(vSPYY /total*100).toFixed(1), val:Math.round(vSPYY).toLocaleString(LANG.locale),  units:spyy_total+' '+LANG.unitsSuffix },
+    { color:'var(--alpha)', label:'Alpha', pct:(vAlpha/total*100).toFixed(1), val:Math.round(vAlpha).toLocaleString(LANG.locale), units:'–' },
+    { color:'var(--s)',     label:'S',     pct:(vS    /total*100).toFixed(1), val:Math.round(vS).toLocaleString(LANG.locale),     units:s_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
   ]);
 
   // ── Donut: brokeři ───────────────────────────────────────────────────────────
@@ -111,10 +112,10 @@ function render(d) {
   ]);
 
   fillTable('tbl-brokers', [
-    { color:'var(--t212)',   label:'T212',    pct:(bT212  /total*100).toFixed(1), val:Math.round(bT212).toLocaleString('cs'),   units:'' },
-    { color:'var(--ibkr)',   label:'IBKR',    pct:(bIBKR  /total*100).toFixed(1), val:Math.round(bIBKR).toLocaleString('cs'),   units:'' },
-    { color:'var(--rev)',    label:'Revolut', pct:(bRev   /total*100).toFixed(1), val:Math.round(bRev).toLocaleString('cs'),    units:'' },
-    { color:'var(--etrade)', label:'E-Trade', pct:(bEtrade/total*100).toFixed(1), val:Math.round(bEtrade).toLocaleString('cs'), units:'' },
+    { color:'var(--t212)',   label:'T212',    pct:(bT212  /total*100).toFixed(1), val:Math.round(bT212).toLocaleString(LANG.locale),   units:'' },
+    { color:'var(--ibkr)',   label:'IBKR',    pct:(bIBKR  /total*100).toFixed(1), val:Math.round(bIBKR).toLocaleString(LANG.locale),   units:'' },
+    { color:'var(--rev)',    label:'Revolut', pct:(bRev   /total*100).toFixed(1), val:Math.round(bRev).toLocaleString(LANG.locale),    units:'' },
+    { color:'var(--etrade)', label:'E-Trade', pct:(bEtrade/total*100).toFixed(1), val:Math.round(bEtrade).toLocaleString(LANG.locale), units:'' },
   ]);
 
   // ── Tabulka vstupních hodnot ─────────────────────────────────────────────────
@@ -122,42 +123,40 @@ function render(d) {
     {
       color:'var(--fwra)',  label:'FWRA',
       price:`€${fmt(d.prices.FWRA_EUR)}`, rate:`${fmt(EUR_CZK)} CZK`,
-      pxczk:`${fmt(FWRA_PX, 1)} Kč`,
-      units:fwra_total.toLocaleString('cs'),
-      val:Math.round(vFWRA * 1000).toLocaleString('cs') + ' Kč',
+      pxczk:`${fmt(FWRA_PX, 1)} ${LANG.currency}`,
+      units:fwra_total.toLocaleString(LANG.locale),
+      val:Math.round(vFWRA * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency,
     },
     {
       color:'var(--spyy)',  label:'SPYY',
       price:`€${fmt(d.prices.SPYY_EUR)}`, rate:`${fmt(EUR_CZK)} CZK`,
-      pxczk:`${fmt(SPYY_PX, 0)} Kč`,
-      units:spyy_total.toLocaleString('cs'),
-      val:Math.round(vSPYY * 1000).toLocaleString('cs') + ' Kč',
+      pxczk:`${fmt(SPYY_PX, 0)} ${LANG.currency}`,
+      units:spyy_total.toLocaleString(LANG.locale),
+      val:Math.round(vSPYY * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency,
     },
     {
       color:'var(--s)',     label:'S',
       price:`$${fmt(d.prices.S_USD)}`, rate:`${fmt(USD_CZK)} CZK`,
-      pxczk:`${fmt(S_PX, 1)} Kč`,
-      units:s_total.toLocaleString('cs'),
-      val:Math.round(vS * 1000).toLocaleString('cs') + ' Kč',
+      pxczk:`${fmt(S_PX, 1)} ${LANG.currency}`,
+      units:s_total.toLocaleString(LANG.locale),
+      val:Math.round(vS * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency,
     },
     {
       color:'var(--alpha)', label:'Alpha Picks',
-      price:'fixní', rate:'–', pxczk:'–', units:'–',
-      val:Math.round(vAlpha * 1000).toLocaleString('cs') + ' Kč',
+      price:LANG.fixed, rate:'–', pxczk:'–', units:'–',
+      val:Math.round(vAlpha * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency,
     },
   ]);
 
   // ── Totály ───────────────────────────────────────────────────────────────────
-  const totalMil = (total / 1000).toLocaleString('cs', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const totalKc  = Math.round(total * 1000).toLocaleString('cs');
-  document.getElementById('center-assets').textContent  = totalMil + ' mil.';
-  document.getElementById('center-brokers').textContent = totalMil + ' mil.';
-  document.querySelector('.total').textContent = totalKc + ' Kč';
+  const totalMil = (total / 1000).toLocaleString(LANG.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const totalKc  = Math.round(total * 1000).toLocaleString(LANG.locale);
+  document.getElementById('center-assets').textContent  = totalMil + ' ' + LANG.million;
+  document.getElementById('center-brokers').textContent = totalMil + ' ' + LANG.million;
+  document.querySelector('.total').textContent = totalKc + ' ' + LANG.currency;
 
   // ── Footnote ─────────────────────────────────────────────────────────────────
-  document.getElementById('footnote').innerHTML =
-    `Alpha Picks: fixní odhad ~200 tis. Kč (T212, individuální akcie) &nbsp;|&nbsp; ` +
-    `Kurzy dle Yahoo Finance, ${d.date}`;
+  document.getElementById('footnote').innerHTML = LANG.footnote(d.date);
 }
 
 render(DATA);
