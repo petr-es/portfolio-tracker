@@ -134,37 +134,35 @@ function render(p, a) {
   document.title = `Portfolio – ${p.date}`;
 
   // ── Donut: aktiva ────────────────────────────────────────────────────────────
-  const assetPaths = drawDonut('donut-assets', [
-    { value: vFWRA,  color: 'var(--fwra)'  },
-    { value: vSPYY,  color: 'var(--spyy)'  },
-    { value: vAlpha, color: 'var(--alpha)' },
-    { value: vS,     color: 'var(--s)'     },
-  ]);
+  const assetItems = [
+    { value: vFWRA,  color:'var(--fwra)',  label:'FWRA',  units:fwra_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
+    { value: vSPYY,  color:'var(--spyy)',  label:'SPYY',  units:spyy_total+' '+LANG.unitsSuffix },
+    { value: vAlpha, color:'var(--alpha)', label:'Alpha', units:'–' },
+    { value: vS,     color:'var(--s)',     label:'S',     units:s_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
+  ].sort((a, b) => b.value - a.value);
 
-  fillTable('tbl-assets', [
-    { color:'var(--fwra)',  label:'FWRA',  pct:(vFWRA /total*100).toFixed(1), val:Math.round(vFWRA).toLocaleString(LANG.locale),  units:fwra_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
-    { color:'var(--spyy)',  label:'SPYY',  pct:(vSPYY /total*100).toFixed(1), val:Math.round(vSPYY).toLocaleString(LANG.locale),  units:spyy_total+' '+LANG.unitsSuffix },
-    { color:'var(--alpha)', label:'Alpha', pct:(vAlpha/total*100).toFixed(1), val:Math.round(vAlpha).toLocaleString(LANG.locale), units:'–' },
-    { color:'var(--s)',     label:'S',     pct:(vS    /total*100).toFixed(1), val:Math.round(vS).toLocaleString(LANG.locale),     units:s_total.toLocaleString(LANG.locale)+' '+LANG.unitsSuffix },
-  ]);
-
+  const assetPaths = drawDonut('donut-assets', assetItems);
+  fillTable('tbl-assets', assetItems.map(i => ({
+    color: i.color, label: i.label, units: i.units,
+    pct: (i.value / total * 100).toFixed(1),
+    val: Math.round(i.value).toLocaleString(LANG.locale),
+  })));
   linkDonutTable(assetPaths, 'tbl-assets');
 
   // ── Donut: brokeři ───────────────────────────────────────────────────────────
-  const brokerPaths = drawDonut('donut-brokers', [
-    { value: bT212,   color: 'var(--t212)'   },
-    { value: bIBKR,   color: 'var(--ibkr)'   },
-    { value: bRev,    color: 'var(--rev)'    },
-    { value: bEtrade, color: 'var(--etrade)' },
-  ]);
+  const brokerItems = [
+    { value: bT212,   color:'var(--t212)',   label:'T212',    units:'' },
+    { value: bIBKR,   color:'var(--ibkr)',   label:'IBKR',    units:'' },
+    { value: bRev,    color:'var(--rev)',    label:'Revolut', units:'' },
+    { value: bEtrade, color:'var(--etrade)', label:'E-Trade', units:'' },
+  ].sort((a, b) => b.value - a.value);
 
-  fillTable('tbl-brokers', [
-    { color:'var(--t212)',   label:'T212',    pct:(bT212  /total*100).toFixed(1), val:Math.round(bT212).toLocaleString(LANG.locale),   units:'' },
-    { color:'var(--ibkr)',   label:'IBKR',    pct:(bIBKR  /total*100).toFixed(1), val:Math.round(bIBKR).toLocaleString(LANG.locale),   units:'' },
-    { color:'var(--rev)',    label:'Revolut', pct:(bRev   /total*100).toFixed(1), val:Math.round(bRev).toLocaleString(LANG.locale),    units:'' },
-    { color:'var(--etrade)', label:'E-Trade', pct:(bEtrade/total*100).toFixed(1), val:Math.round(bEtrade).toLocaleString(LANG.locale), units:'' },
-  ]);
-
+  const brokerPaths = drawDonut('donut-brokers', brokerItems);
+  fillTable('tbl-brokers', brokerItems.map(i => ({
+    color: i.color, label: i.label, units: i.units,
+    pct: (i.value / total * 100).toFixed(1),
+    val: Math.round(i.value).toLocaleString(LANG.locale),
+  })));
   linkDonutTable(brokerPaths, 'tbl-brokers');
 
   // ── Tabulka vstupních hodnot ─────────────────────────────────────────────────
