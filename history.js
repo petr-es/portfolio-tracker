@@ -88,5 +88,17 @@ var PRICE_HISTORY=[
       "s": {"ibkr": 1257, "etrade": 586},
       "alpha": {"fixedCzk": 200}
     }
+  },
+  {
+    "ts": "2026-04-01T21:18:06Z",
+    "rates": {
+      "EUR_CZK": 24.51,
+      "USD_CZK": 21.15
+    },
+    "prices": {
+      "FWRA_EUR": 7.13,
+      "SPYY_EUR": 246.25,
+      "S_USD": 13.31
+    }
   }
 ];
