@@ -58,5 +58,17 @@ var PRICE_HISTORY=[
       "SPYY_EUR": 246.25,
       "S_USD": 13.31
     }
+  },
+  {
+    "ts": "2026-04-01T21:18:06Z",
+    "rates": {
+      "EUR_CZK": 24.51,
+      "USD_CZK": 21.15
+    },
+    "prices": {
+      "FWRA_EUR": 7.13,
+      "SPYY_EUR": 246.25,
+      "S_USD": 13.31
+    }
   }
 ];
