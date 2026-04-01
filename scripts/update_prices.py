@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Fetch latest prices from Yahoo Finance and update scripts/prices.js."""
+"""Fetch latest prices from Yahoo Finance and update scripts/prices.js and scripts/history.js."""
 
+import json
 import re
 import sys
 from datetime import datetime
@@ -17,6 +18,7 @@ TICKERS = {
 }
 
 OUTPUT = "scripts/prices.js"
+HISTORY = "history.js"
 
 
 def fetch_price(ticker: str) -> float | None:
@@ -69,6 +71,24 @@ def main():
         f.write(content)
 
     print(f"{OUTPUT} updated for {date_str}.")
+
+    # Append to history
+    entry = {
+        "ts": now.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "rates": {k: prices[k] for k in ["EUR_CZK", "USD_CZK"] if k in prices},
+        "prices": {k: prices[k] for k in ["FWRA_EUR", "SPYY_EUR", "S_USD"] if k in prices},
+    }
+    try:
+        with open(HISTORY, "r", encoding="utf-8") as f:
+            raw = f.read()
+        existing = json.loads(re.search(r"\[.*\]", raw, re.DOTALL).group())
+    except Exception:
+        existing = []
+    existing.append(entry)
+    js_array = json.dumps(existing, indent=2)
+    with open(HISTORY, "w", encoding="utf-8") as f:
+        f.write(f"var PRICE_HISTORY={js_array};\n")
+    print(f"{HISTORY} updated ({len(existing)} records).")
 
 
 if __name__ == "__main__":
