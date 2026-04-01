@@ -131,7 +131,7 @@ function render(p, a) {
 
   // ── Header ──────────────────────────────────────────────────────────────────
   document.getElementById('header-date').textContent = `${p.date} ${p.updated.split(' ').pop()}`;
-  document.title = `Portfolio – ${p.date}`;
+  document.title = 'Wealth Lens';
 
   // ── Donut: aktiva ────────────────────────────────────────────────────────────
   const assetItems = [
