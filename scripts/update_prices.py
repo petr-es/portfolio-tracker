@@ -2,6 +2,7 @@
 """Fetch latest prices from Yahoo Finance and update scripts/prices.js and scripts/history.js."""
 
 import json
+import math
 import re
 import sys
 from datetime import datetime
@@ -44,7 +45,11 @@ def fetch_price(ticker: str) -> float | None:
     try:
         data = yf.Ticker(ticker).history(period="2d")
         if not data.empty:
-            return round(float(data["Close"].iloc[-1]), 2)
+            val = round(float(data["Close"].iloc[-1]), 2)
+            if math.isnan(val):
+                print(f"  WARNING: {ticker} returned NaN, skipping.", file=sys.stderr)
+                return None
+            return val
     except Exception as e:
         print(f"  WARNING: failed to fetch {ticker}: {e}", file=sys.stderr)
     return None
@@ -81,7 +86,7 @@ def main():
     # Update each price/rate only if successfully fetched
     for key, value in prices.items():
         content = re.sub(
-            rf'"{key}":\s*[\d.]+',
+            rf'"{key}":\s*(?:[\d.]+|[Nn]a[Nn])',
             f'"{key}": {value}',
             content,
         )

@@ -7,7 +7,7 @@ var PRICES = {
   },
   "prices": {
     "FWRA_EUR": 7.13,
-    "SPYY_EUR": nan,
+    "SPYY_EUR": NaN,
     "S_USD": 13.31
   }
 };

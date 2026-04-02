@@ -108,9 +108,9 @@ function fmt(n, dec = 2) {
 function render(p, a) {
   const EUR_CZK = p.rates.EUR_CZK;
   const USD_CZK = p.rates.USD_CZK;
-  const FWRA_PX = p.prices.FWRA_EUR * EUR_CZK;
-  const SPYY_PX = p.prices.SPYY_EUR * EUR_CZK;
-  const S_PX    = p.prices.S_USD    * USD_CZK;
+  const FWRA_PX = (p.prices.FWRA_EUR || 0) * EUR_CZK;
+  const SPYY_PX = (p.prices.SPYY_EUR || 0) * EUR_CZK;
+  const S_PX    = (p.prices.S_USD    || 0) * USD_CZK;
 
   const fwra_total = (a.fwra.holdings.t212 || 0) + (a.fwra.holdings.ibkr || 0) + (a.fwra.holdings.rev || 0);
   const spyy_total =  a.spyy.holdings.t212 || 0;
@@ -167,15 +167,18 @@ function render(p, a) {
   // ── Tabulka vstupních hodnot ─────────────────────────────────────────────────
   fillPricesTable([
     { _v: vFWRA,  color:'var(--fwra)',  label:a.fwra.ticker,  url:a.fwra.yahooUrl,
-      price:`€${fmt(p.prices.FWRA_EUR)}`, pxczk:`${fmt(FWRA_PX, 1)} ${LANG.currency}`,
+      price: p.prices.FWRA_EUR ? `€${fmt(p.prices.FWRA_EUR)}` : '–',
+      pxczk: p.prices.FWRA_EUR ? `${fmt(FWRA_PX, 1)} ${LANG.currency}` : '–',
       units:fwra_total.toLocaleString(LANG.locale),
       val:Math.round(vFWRA * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency },
     { _v: vSPYY,  color:'var(--spyy)',  label:a.spyy.ticker,  url:a.spyy.yahooUrl,
-      price:`€${fmt(p.prices.SPYY_EUR)}`, pxczk:`${fmt(SPYY_PX, 0)} ${LANG.currency}`,
+      price: p.prices.SPYY_EUR ? `€${fmt(p.prices.SPYY_EUR)}` : '–',
+      pxczk: p.prices.SPYY_EUR ? `${fmt(SPYY_PX, 0)} ${LANG.currency}` : '–',
       units:spyy_total.toLocaleString(LANG.locale),
       val:Math.round(vSPYY * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency },
     { _v: vS,     color:'var(--s)',     label:a.s.ticker,     url:a.s.yahooUrl,
-      price:`$${fmt(p.prices.S_USD)}`, pxczk:`${fmt(S_PX, 1)} ${LANG.currency}`,
+      price: p.prices.S_USD ? `$${fmt(p.prices.S_USD)}` : '–',
+      pxczk: p.prices.S_USD ? `${fmt(S_PX, 1)} ${LANG.currency}` : '–',
       units:s_total.toLocaleString(LANG.locale),
       val:Math.round(vS * 1000).toLocaleString(LANG.locale) + ' ' + LANG.currency },
     { _v: vAlpha, color:'var(--alpha)', label:'Alpha Picks',   url:null,
