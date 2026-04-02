@@ -30,6 +30,11 @@ const LANG_CS = {
   btnDone:      'Hotovo',
   btnError:     'Chyba',
 
+  // Toaster chyby
+  toastRetry:        'Zkusit znova',
+  toastUpdateFailed: 'Aktualizace selhala — nepodařilo se načíst všechny ceny.',
+  toastTokenError:   'Neplatný token — aktualizace selhala.',
+
   // Poznámka pod čarou
   footnote: (date, eurCzk, usdCzk) =>
     `Kurzy dle Yahoo Finance, ${date} &nbsp;·&nbsp; <a href="https://finance.yahoo.com/quote/EURCZK=X" target="_blank">EUR/CZK ${eurCzk}</a> &nbsp;·&nbsp; <a href="https://finance.yahoo.com/quote/USDCZK=X" target="_blank">USD/CZK ${usdCzk}</a>`,

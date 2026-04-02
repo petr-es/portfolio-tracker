@@ -18,6 +18,8 @@ TICKERS = {
     "USD_CZK":   "USDCZK=X",
 }
 
+REQUIRED = {"FWRA_EUR", "SPYY_EUR", "S_USD", "EUR_CZK", "USD_CZK"}
+
 OUTPUT  = "scripts/prices.js"
 HISTORY = "history.js"
 ASSETS  = "assets.js"
@@ -43,12 +45,13 @@ def parse_assets() -> dict:
 
 def fetch_price(ticker: str) -> float | None:
     try:
-        data = yf.Ticker(ticker).history(period="2d")
+        data = yf.Ticker(ticker).history(period="5d")
         if not data.empty:
-            val = round(float(data["Close"].iloc[-1]), 2)
-            if math.isnan(val):
-                print(f"  WARNING: {ticker} returned NaN, skipping.", file=sys.stderr)
+            close = data["Close"].dropna()
+            if close.empty:
+                print(f"  WARNING: {ticker} has no non-NaN close prices.", file=sys.stderr)
                 return None
+            val = round(float(close.iloc[-1]), 2)
             return val
     except Exception as e:
         print(f"  WARNING: failed to fetch {ticker}: {e}", file=sys.stderr)
@@ -95,6 +98,12 @@ def main():
         f.write(content)
 
     print(f"{OUTPUT} updated for {date_str}.")
+
+    # Abort if any required price is missing — do not write history
+    missing = REQUIRED - set(prices.keys())
+    if missing:
+        print(f"ERROR: missing prices: {', '.join(sorted(missing))} — history not updated.", file=sys.stderr)
+        sys.exit(1)
 
     # Append to history
     entry = {

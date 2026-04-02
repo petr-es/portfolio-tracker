@@ -10,10 +10,6 @@ function setBtnState(state) {
   const icon = document.getElementById('update-icon');
   if (state === 'loading') {
     label.textContent = LANG.btnUpdating;
-  } else if (state === 'error') {
-    icon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
-    label.textContent = LANG.btnError;
-    setTimeout(() => { setBtnState(null); resetIcon(); }, 4000);
   } else if (state === 'success') {
     icon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
     label.textContent = LANG.btnDone;
@@ -27,6 +23,23 @@ function setBtnState(state) {
 function resetIcon() {
   document.getElementById('update-icon').innerHTML =
     '<path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>';
+}
+
+function showToast(message) {
+  const existing = document.getElementById('update-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'update-toast';
+  toast.innerHTML =
+    `<span class="toast-msg">${message}</span>` +
+    `<button class="toast-retry" onclick="dismissToast();triggerUpdate()">${LANG.toastRetry}</button>` +
+    `<button class="toast-close" onclick="dismissToast()">×</button>`;
+  document.body.appendChild(toast);
+}
+
+function dismissToast() {
+  const t = document.getElementById('update-toast');
+  if (t) t.remove();
 }
 
 async function applyFreshPrices() {
@@ -51,7 +64,11 @@ async function applyFreshPrices() {
 async function pollLatestRun(triggeredAfter, token) {
   const url = `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/runs?per_page=1`;
   const res  = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!res.ok) { setBtnState('error'); return; }
+  if (!res.ok) {
+    setBtnState(null);
+    showToast(LANG.toastUpdateFailed);
+    return;
+  }
   const { workflow_runs } = await res.json();
   const run = workflow_runs[0];
   if (!run || new Date(run.created_at) < triggeredAfter) {
@@ -63,7 +80,8 @@ async function pollLatestRun(triggeredAfter, token) {
       try { await applyFreshPrices(); } catch (e) { console.error('applyFreshPrices:', e); }
       setBtnState('success');
     } else {
-      setBtnState('error');
+      setBtnState(null);
+      showToast(LANG.toastUpdateFailed);
     }
   } else {
     pollTimer = setTimeout(() => pollLatestRun(triggeredAfter, token), 3000);
@@ -81,6 +99,7 @@ function getToken() {
 }
 
 async function triggerUpdate() {
+  dismissToast();
   const token = getToken();
   if (!token) return;
   clearTimeout(pollTimer);
@@ -95,7 +114,8 @@ async function triggerUpdate() {
   );
   if (!res.ok) {
     if (res.status === 401 || res.status === 403) localStorage.removeItem('gh_token');
-    setBtnState('error');
+    setBtnState(null);
+    showToast(LANG.toastTokenError);
     return;
   }
   // Nastav triggeredAt až PO dispatch a odečti 5s buffer proti clock skew
