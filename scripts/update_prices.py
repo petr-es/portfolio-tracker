@@ -44,14 +44,12 @@ def parse_assets() -> dict:
 
 def fetch_price(ticker: str) -> float | None:
     try:
-        data = yf.Ticker(ticker).history(period="5d")
-        if not data.empty:
-            close = data["Close"].dropna()
-            if close.empty:
-                print(f"  WARNING: {ticker} has no non-NaN close prices.", file=sys.stderr)
-                return None
-            val = round(float(close.iloc[-1]), 2)
-            return val
+        info = yf.Ticker(ticker).info
+        val = info.get("regularMarketPrice") or info.get("previousClose")
+        if val is None:
+            print(f"  WARNING: {ticker} returned no price.", file=sys.stderr)
+            return None
+        return round(float(val), 2)
     except Exception as e:
         print(f"  WARNING: failed to fetch {ticker}: {e}", file=sys.stderr)
     return None
