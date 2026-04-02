@@ -2,7 +2,6 @@
 """Fetch latest prices from Yahoo Finance and update scripts/prices.js and scripts/history.js."""
 
 import json
-import math
 import re
 import sys
 from datetime import datetime
