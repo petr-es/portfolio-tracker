@@ -2,13 +2,13 @@ name: Update prices
 
 on:
   schedule:
-    # 10:00 Prague (CEST = UTC+2, summer)
+    # 10:00 Prague (CEST = UTC+2, summer) / 09:00 (CET = UTC+1, winter)
     - cron: '0 8 * * 1-5'
-    # 10:00 Prague (CET = UTC+1, winter)
-    - cron: '0 9 * * 1-5'
-    # 17:00 Prague (CEST = UTC+2, summer)
-    - cron: '0 15 * * 1-5'
-    # 17:00 Prague (CET = UTC+1, winter)
+    # 12:30 Prague (CEST) / 11:30 (CET)
+    - cron: '30 10 * * 1-5'
+    # 15:00 Prague (CEST) / 14:00 (CET)
+    - cron: '0 13 * * 1-5'
+    # 18:00 Prague (CEST) / 17:00 (CET)
     - cron: '0 16 * * 1-5'
   workflow_dispatch: # allow manual trigger
 
