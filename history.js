@@ -839,5 +839,34 @@ var PRICE_HISTORY=[
         "fixedCzk": 200.0
       }
     }
+  },
+  {
+    "ts": "2026-04-09T11:33:45Z",
+    "rates": {
+      "EUR_CZK": 24.4,
+      "USD_CZK": 20.87
+    },
+    "prices": {
+      "FWRA_EUR": 7.27,
+      "SPYY_EUR": 250.8,
+      "S_USD": 13.5
+    },
+    "assets": {
+      "fwra": {
+        "t212": 3124.0,
+        "ibkr": 2203.0,
+        "rev": 1416.0
+      },
+      "spyy": {
+        "t212": 81.5
+      },
+      "s": {
+        "ibkr": 1257.0,
+        "etrade": 586.0
+      },
+      "alpha": {
+        "fixedCzk": 200.0
+      }
+    }
   }
 ];
